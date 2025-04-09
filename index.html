@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Unity WebGL Player | Nut_Bolt</title>
+    <link rel="shortcut icon" href="TemplateData/favicon.ico">
+    <link rel="stylesheet" href="TemplateData/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@telegram-apps/sdk@2.11.0/dist/index.iife.min.js"></script>
+    <!--<script src="https://sad.adsgram.ai/js/sad.min.js"></script>-->
+    <!--<script src="https://cdn.jsdelivr.net/npm/@tonconnect/sdk@3.0.5/dist/tonconnect-sdk.min.js"></script>-->
+    <script src="https://www.gstatic.com/firebasejs/11.2.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.2.0/firebase-analytics-compat.js"></script>
+    <!-- <script src="./bundle.js"></script>  -->
+
+</head>
+<body>
+    <div id="unity-container" class="unity-desktop">
+        <canvas id="unity-canvas" width=900 height=600 tabindex="-1"></canvas>
+        <div id="unity-loading-bar">
+            <div id="unity-logo"></div>
+            <div id="unity-progress-bar-empty">
+                <div id="unity-progress-bar-full"></div>
+            </div>
+        </div>
+        <div id="unity-warning"> </div>
+        <div id="unity-footer" , style="display: none;">
+            <div id="unity-webgl-logo"></div>
+            <div id="unity-fullscreen-button"></div>
+            <div id="unity-build-title">Nut_Bolt</div>
+        </div>
+    </div>
+    <script>
+
+      var container = document.querySelector("#unity-container");
+      var canvas = document.querySelector("#unity-canvas");
+      var loadingBar = document.querySelector("#unity-loading-bar");
+      var progressBarFull = document.querySelector("#unity-progress-bar-full");
+      var fullscreenButton = document.querySelector("#unity-fullscreen-button");
+      var warningBanner = document.querySelector("#unity-warning");
+
+      // Shows a temporary message banner/ribbon for a few seconds, or
+      // a permanent error message on top of the canvas if type=='error'.
+      // If type=='warning', a yellow highlight color is used.
+      // Modify or remove this function to customize the visually presented
+      // way that non-critical warnings and error messages are presented to the
+      // user.
+      function unityShowBanner(msg, type) {
+        function updateBannerVisibility() {
+          warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
+        }
+        var div = document.createElement('div');
+        div.innerHTML = msg;
+        warningBanner.appendChild(div);
+        if (type == 'error') div.style = 'background: red; padding: 10px;';
+        else {
+          if (type == 'warning') div.style = 'background: yellow; padding: 10px;';
+          setTimeout(function() {
+            warningBanner.removeChild(div);
+            updateBannerVisibility();
+          }, 5000);
+        }
+        updateBannerVisibility();
+      }
+
+      var buildUrl = "Build";
+      var loaderUrl = buildUrl + "/Cleanbuild.loader.js";
+      var config = {
+        dataUrl: buildUrl + "/Cleanbuild.data",
+        frameworkUrl: buildUrl + "/Cleanbuild.framework.js",
+        codeUrl: buildUrl + "/Cleanbuild.wasm",
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "DefaultCompany",
+        productName: "Nut_Bolt",
+        productVersion: "1.0",
+        showBanner: unityShowBanner,
+      };
+
+      // By default, Unity keeps WebGL canvas render target size matched with
+      // the DOM size of the canvas element (scaled by window.devicePixelRatio)
+      // Set this to false if you want to decouple this synchronization from
+      // happening inside the engine, and you would instead like to size up
+      // the canvas DOM size and WebGL render target sizes yourself.
+      // config.matchWebGLToCanvasSize = false;
+
+      // If you would like all file writes inside Unity Application.persistentDataPath
+      // directory to automatically persist so that the contents are remembered when
+      // the user revisits the site the next time, uncomment the following line:
+      // config.autoSyncPersistentDataPath = true;
+      // This autosyncing is currently not the default behavior to avoid regressing
+      // existing user projects that might rely on the earlier manual
+      // JS_FileSystem_Sync() behavior, but in future Unity version, this will be
+      // expected to change.
+
+      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+        // Mobile device style: fill the whole browser client area with the game canvas:
+
+        var meta = document.createElement('meta');
+        meta.name = 'viewport';
+        meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
+        document.getElementsByTagName('head')[0].appendChild(meta);
+        container.className = "unity-mobile";
+        canvas.className = "unity-mobile";
+
+        // To lower canvas resolution on mobile devices to gain some
+        // performance, uncomment the following line:
+        // config.devicePixelRatio = 1;
+
+
+      } else {
+        // Desktop style: Render the game canvas in a window that can be maximized to fullscreen:
+
+        canvas.style.width = "900px";
+        canvas.style.height = "600px";
+      }
+
+      loadingBar.style.display = "block";
+
+      var script = document.createElement("script");
+      script.src = loaderUrl;
+      script.onload = () => {
+        createUnityInstance(canvas, config, (progress) => {
+          progressBarFull.style.width = 100 * progress + "%";
+              }).then((unityInstance) => {
+                loadingBar.style.display = "none";
+                fullscreenButton.onclick = () => {
+                  unityInstance.SetFullscreen(1);
+                };
+              }).catch((message) => {
+                alert(message);
+              });
+            };
+
+      document.body.appendChild(script);
+
+    </script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+
+        #unity-container {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        canvas {
+            display: block;
+            /* width: 100vw;
+            height: 100vh; */
+            object-fit: contain;
+            width: 100%;
+            height: 100%;
+            /* max-width: 420px;
+            max-height: 639px; */
+        }
+    </style>
+    <script>
+        // function resizeCanvas() {
+        //     var canvas = document.getElementById('unity-canvas');
+        //     canvas.style.width = window.innerWidth + "px";
+        //     canvas.style.height = window.innerHeight + "px";
+        // }
+        function resizeCanvas() {
+            const canvas = document.querySelector("#unity-canvas");
+            canvas.style.width = "100%";
+            canvas.style.height = "100%";
+        }
+        window.addEventListener('resize', resizeCanvas);
+        window.addEventListener('load', resizeCanvas);
+    </script>
+    <script>
+      try {
+          const hash = window.location.hash;
+
+          // Kiểm tra xem hash có chứa tgWebAppData không
+          if (hash.includes("tgWebAppData")) {
+              console.log("tgWebAppData found in hash. Checking if script is already loaded...");
+
+              // Kiểm tra nếu script đã được tải
+              if (!document.querySelector("script[src='https://telegram.org/js/telegram-web-app.js']")) {
+                  console.log("Loading telegram-web-app.js...");
+
+                  // Tạo thẻ <script> để load file từ Telegram
+                  var telegramScript = document.createElement("script");
+                  telegramScript.src = "https://telegram.org/js/telegram-web-app.js";
+                  telegramScript.type = "text/javascript";
+                  telegramScript.async = true;
+
+                  // Append into head
+                  document.head.appendChild(telegramScript);
+
+                  telegramScript.onload = function () {
+                      console.log("telegram-web-app.js loaded successfully!");
+                      // Thực hiện các thao tác cần thiết với telegram-web-app.js tại đây
+                  };
+              } else {
+                  console.log("telegram-web-app.js is already loaded.");
+              }
+          } else {
+              console.log("tgWebAppData NOT found in hash. Script will not be loaded.");
+          }
+      } catch (error) {
+          console.error("An error occurred while checking the hash:", error);
+      }
+  </script>
+
+    <script>
+        (function () {
+            var { retrieveLaunchParams, postEvent } = window.telegramApps.sdk;
+            var lp = retrieveLaunchParams();
+            const color = "#0000FF";
+            postEvent('web_app_set_header_color', { color_key: color });
+
+            // Some versions of Telegram don't need the classes above.
+            if (['macos', 'tdesktop', 'weba', 'web', 'webk'].includes(lp.platform)) {
+                return;
+            }
+
+            // Expand the application.
+            postEvent('web_app_expand');
+            postEvent('web_app_request_fullscreen');
+            document.body.classList.add('mobile-body');
+            document.getElementById('unity-desktop').classList.add('mobile-unity-desktop');
+        })();
+    </script>
+</body>
+</html>
