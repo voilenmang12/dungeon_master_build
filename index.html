@@ -1,34 +1,27 @@
 <!DOCTYPE html>
 <html lang="en-us">
-<head>
+  <head>
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Unity WebGL Player | Nut_Bolt</title>
+    <title>Unity WebGL Player | dungeon master</title>
     <link rel="shortcut icon" href="TemplateData/favicon.ico">
     <link rel="stylesheet" href="TemplateData/style.css">
-    <script src="https://cdn.jsdelivr.net/npm/@telegram-apps/sdk@2.11.0/dist/index.iife.min.js"></script>
-    <!--<script src="https://sad.adsgram.ai/js/sad.min.js"></script>-->
-    <!--<script src="https://cdn.jsdelivr.net/npm/@tonconnect/sdk@3.0.5/dist/tonconnect-sdk.min.js"></script>-->
-    <script src="https://www.gstatic.com/firebasejs/11.2.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/11.2.0/firebase-analytics-compat.js"></script>
-    <!-- <script src="./bundle.js"></script>  -->
-
-</head>
-<body>
+  </head>
+  <body>
     <div id="unity-container" class="unity-desktop">
-        <canvas id="unity-canvas" width=900 height=600 tabindex="-1"></canvas>
-        <div id="unity-loading-bar">
-            <div id="unity-logo"></div>
-            <div id="unity-progress-bar-empty">
-                <div id="unity-progress-bar-full"></div>
-            </div>
+      <canvas id="unity-canvas" width=900 height=600 tabindex="-1"></canvas>
+      <div id="unity-loading-bar">
+        <div id="unity-logo"></div>
+        <div id="unity-progress-bar-empty">
+          <div id="unity-progress-bar-full"></div>
         </div>
-        <div id="unity-warning"> </div>
-        <div id="unity-footer" , style="display: none;">
-            <div id="unity-webgl-logo"></div>
-            <div id="unity-fullscreen-button"></div>
-            <div id="unity-build-title">Nut_Bolt</div>
-        </div>
+      </div>
+      <div id="unity-warning"> </div>
+      <div id="unity-footer">
+        <div id="unity-webgl-logo"></div>
+        <div id="unity-fullscreen-button"></div>
+        <div id="unity-build-title">dungeon master</div>
+      </div>
     </div>
     <script>
 
@@ -71,7 +64,7 @@
         codeUrl: buildUrl + "/Cleanbuild.wasm",
         streamingAssetsUrl: "StreamingAssets",
         companyName: "DefaultCompany",
-        productName: "Nut_Bolt",
+        productName: "dungeon master",
         productVersion: "1.0",
         showBanner: unityShowBanner,
       };
@@ -134,101 +127,5 @@
       document.body.appendChild(script);
 
     </script>
-    <style>
-        body {
-            margin: 0;
-            overflow: hidden;
-        }
-
-        #unity-container {
-            width: 100%;
-            max-width: 500px;
-            margin: 0 auto;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        canvas {
-            display: block;
-            /* width: 100vw;
-            height: 100vh; */
-            object-fit: contain;
-            width: 100%;
-            height: 100%;
-            /* max-width: 420px;
-            max-height: 639px; */
-        }
-    </style>
-    <script>
-        // function resizeCanvas() {
-        //     var canvas = document.getElementById('unity-canvas');
-        //     canvas.style.width = window.innerWidth + "px";
-        //     canvas.style.height = window.innerHeight + "px";
-        // }
-        function resizeCanvas() {
-            const canvas = document.querySelector("#unity-canvas");
-            canvas.style.width = "100%";
-            canvas.style.height = "100%";
-        }
-        window.addEventListener('resize', resizeCanvas);
-        window.addEventListener('load', resizeCanvas);
-    </script>
-    <script>
-      try {
-          const hash = window.location.hash;
-
-          // Kiểm tra xem hash có chứa tgWebAppData không
-          if (hash.includes("tgWebAppData")) {
-              console.log("tgWebAppData found in hash. Checking if script is already loaded...");
-
-              // Kiểm tra nếu script đã được tải
-              if (!document.querySelector("script[src='https://telegram.org/js/telegram-web-app.js']")) {
-                  console.log("Loading telegram-web-app.js...");
-
-                  // Tạo thẻ <script> để load file từ Telegram
-                  var telegramScript = document.createElement("script");
-                  telegramScript.src = "https://telegram.org/js/telegram-web-app.js";
-                  telegramScript.type = "text/javascript";
-                  telegramScript.async = true;
-
-                  // Append into head
-                  document.head.appendChild(telegramScript);
-
-                  telegramScript.onload = function () {
-                      console.log("telegram-web-app.js loaded successfully!");
-                      // Thực hiện các thao tác cần thiết với telegram-web-app.js tại đây
-                  };
-              } else {
-                  console.log("telegram-web-app.js is already loaded.");
-              }
-          } else {
-              console.log("tgWebAppData NOT found in hash. Script will not be loaded.");
-          }
-      } catch (error) {
-          console.error("An error occurred while checking the hash:", error);
-      }
-  </script>
-
-    <script>
-        (function () {
-            var { retrieveLaunchParams, postEvent } = window.telegramApps.sdk;
-            var lp = retrieveLaunchParams();
-            const color = "#0000FF";
-            postEvent('web_app_set_header_color', { color_key: color });
-
-            // Some versions of Telegram don't need the classes above.
-            if (['macos', 'tdesktop', 'weba', 'web', 'webk'].includes(lp.platform)) {
-                return;
-            }
-
-            // Expand the application.
-            postEvent('web_app_expand');
-            postEvent('web_app_request_fullscreen');
-            document.body.classList.add('mobile-body');
-            document.getElementById('unity-desktop').classList.add('mobile-unity-desktop');
-        })();
-    </script>
-</body>
+  </body>
 </html>
