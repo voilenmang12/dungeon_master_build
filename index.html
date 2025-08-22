@@ -1,27 +1,28 @@
 <!DOCTYPE html>
 <html lang="en-us">
-  <head>
+<head>
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Unity WebGL Player | dungeon master</title>
+    <title>Unity WebGL Player | Nut_Bolt</title>
     <link rel="shortcut icon" href="TemplateData/favicon.ico">
     <link rel="stylesheet" href="TemplateData/style.css">
-  </head>
-  <body>
+
+</head>
+<body>
     <div id="unity-container" class="unity-desktop">
-      <canvas id="unity-canvas" width=900 height=600 tabindex="-1"></canvas>
-      <div id="unity-loading-bar">
-        <div id="unity-logo"></div>
-        <div id="unity-progress-bar-empty">
-          <div id="unity-progress-bar-full"></div>
+        <canvas id="unity-canvas" width=900 height=600 tabindex="-1"></canvas>
+        <div id="unity-loading-bar">
+            <div id="unity-logo"></div>
+            <div id="unity-progress-bar-empty">
+                <div id="unity-progress-bar-full"></div>
+            </div>
         </div>
-      </div>
-      <div id="unity-warning"> </div>
-      <div id="unity-footer">
-        <div id="unity-webgl-logo"></div>
-        <div id="unity-fullscreen-button"></div>
-        <div id="unity-build-title">dungeon master</div>
-      </div>
+        <div id="unity-warning"> </div>
+        <div id="unity-footer" , style="display: none;">
+            <div id="unity-webgl-logo"></div>
+            <div id="unity-fullscreen-button"></div>
+            <div id="unity-build-title">Nut_Bolt</div>
+        </div>
     </div>
     <script>
 
@@ -57,14 +58,14 @@
       }
 
       var buildUrl = "Build";
-      var loaderUrl = buildUrl + "/Cleanbuild.loader.js";
+      var loaderUrl = buildUrl + "/dungeon_master_build.loader.js";
       var config = {
-        dataUrl: buildUrl + "/Cleanbuild.data",
-        frameworkUrl: buildUrl + "/Cleanbuild.framework.js",
-        codeUrl: buildUrl + "/Cleanbuild.wasm",
+        dataUrl: buildUrl + "/dungeon_master_build.data",
+        frameworkUrl: buildUrl + "/dungeon_master_build.framework.js",
+        codeUrl: buildUrl + "/dungeon_master_build.wasm",
         streamingAssetsUrl: "StreamingAssets",
         companyName: "DefaultCompany",
-        productName: "dungeon master",
+        productName: "Nut_Bolt",
         productVersion: "1.0",
         showBanner: unityShowBanner,
       };
@@ -127,5 +128,65 @@
       document.body.appendChild(script);
 
     </script>
-  </body>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+
+        #unity-container {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        canvas {
+            display: block;
+            /* width: 100vw;
+            height: 100vh; */
+            object-fit: contain;
+            width: 100%;
+            height: 100%;
+            /* max-width: 420px;
+            max-height: 639px; */
+        }
+    </style>
+    <script>
+        // function resizeCanvas() {
+        //     var canvas = document.getElementById('unity-canvas');
+        //     canvas.style.width = window.innerWidth + "px";
+        //     canvas.style.height = window.innerHeight + "px";
+        // }
+        function resizeCanvas() {
+            const canvas = document.querySelector("#unity-canvas");
+            canvas.style.width = "100%";
+            canvas.style.height = "100%";
+        }
+        window.addEventListener('resize', resizeCanvas);
+        window.addEventListener('load', resizeCanvas);
+    </script>
+    <script>
+        (function () {
+            var { retrieveLaunchParams, postEvent } = window.telegramApps.sdk;
+            var lp = retrieveLaunchParams();
+            const color = "#0000FF";
+            postEvent('web_app_set_header_color', { color_key: color });
+
+            // Some versions of Telegram don't need the classes above.
+            if (['macos', 'tdesktop', 'weba', 'web', 'webk'].includes(lp.platform)) {
+                return;
+            }
+
+            // Expand the application.
+            postEvent('web_app_expand');
+            postEvent('web_app_request_fullscreen');
+            document.body.classList.add('mobile-body');
+            document.getElementById('unity-desktop').classList.add('mobile-unity-desktop');
+        })();
+    </script>
+</body>
 </html>
